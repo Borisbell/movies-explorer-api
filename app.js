@@ -18,6 +18,17 @@ mongoose.connect('mongodb://localhost:27017/movies_explorer_db');
 app.use(bodyParser.json());
 app.use(requestLogger);
 
+const allowedCors = [
+  'https://moviesbb.nomoredomains.xyz',
+  'http://moviesbb.nomoredomains.xyz',
+  'http://localhost:3000',
+  'http://localhost:3001',
+];
+app.use(cors({
+  origin: allowedCors,
+  credentials: true,
+}));
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     password: Joi.string().required(),
