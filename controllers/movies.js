@@ -2,7 +2,7 @@ const NotFoundError = require('../errors/NotFoundError');
 const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
-const Card = require('../models/movie');
+const Movie = require('../models/movie');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
@@ -13,9 +13,9 @@ module.exports.getMovies = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const { country, director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId } = req.body;
+  const { country, duration, director, year, description, image, trailerLink, nameRU, nameEN, thumbnail, movieId } = req.body;
   const owner = req.user._id;
-  Movie.create({ country, director, duration, year, description, image, trailer, nameRU, nameEN, thumbnail, movieId })
+  Movie.create({ country, director, duration, year, description, image, trailerLink, nameRU, nameEN, thumbnail, movieId, owner })
     .then((movie) => {
       res.send(movie);
     })

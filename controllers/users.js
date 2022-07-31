@@ -1,6 +1,13 @@
 const bcrypt = require('bcrypt');
 const { generateToken } = require('../helpers/jwt');
 const User = require('../models/user');
+const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
+const ConflictError = require('../errors/ConflictError');
+const UnAuthError = require('../errors/UnAuthError');
+
+const MONGO_DUPLICATE_ERROR_CODE = 11000;
+const SALT_ROUNDS = 10;
 
 module.exports.getMyself = (req, res, next) => {
   User.findById(req.user._id)
@@ -37,7 +44,7 @@ module.exports.createUser = (req, res, next) => {
   bcrypt
     .hash(password, SALT_ROUNDS)
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name, email, password: hash,
     }))
     .then((user) => {
       res.send({

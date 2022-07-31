@@ -7,6 +7,10 @@ const movieSchema = new mongoose.Schema({
     required: true,
     minlength: 2,
   },
+  duration: {
+    type: Number,
+    required: true,
+  },
   director: {
     type: String,
     required: true,
@@ -34,7 +38,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: () => 'Неверный формат ссылки на изображение',
+      message: () => 'Неверный формат ссылки на видео',
     },
   },
   thumbnail: {
@@ -51,8 +55,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   movieId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'movie',
+    type: Number,
     required: true,
   },
   nameRU: {

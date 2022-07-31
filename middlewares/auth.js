@@ -13,6 +13,7 @@ const isAuth = (req, res, next) => {
   try {
     payload = checkToken(token);
   } catch (err) {
+    console.log('там проблема')
     throw new UnAuthError('Необходима авторизация');
   }
   req.user = payload;
