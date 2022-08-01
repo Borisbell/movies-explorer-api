@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -13,8 +14,9 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { isAuth } = require('./middlewares/auth');
 
 const app = express();
+app.use(helmet());
 const { PORT = 3000 } = process.env;
-mongoose.connect('mongodb://localhost:27017/movies_explorer_db');
+mongoose.connect('mongodb://localhost:27017/moviesdb');
 
 app.use(bodyParser.json());
 app.use(requestLogger);
