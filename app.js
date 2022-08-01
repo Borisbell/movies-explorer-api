@@ -15,8 +15,9 @@ const { isAuth } = require('./middlewares/auth');
 
 const app = express();
 app.use(helmet());
-const { PORT = 3000 } = process.env;
-mongoose.connect('mongodb://localhost:27017/moviesdb');
+const { NODE_ENV, PORT = 3000, MONGO_URL } = process.env;
+
+mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : 'mongodb://localhost:27017/moviesdb');
 
 app.use(bodyParser.json());
 app.use(requestLogger);
@@ -65,4 +66,4 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   return res.status(500).send({ message: 'Что-то пошло не так' });
 });
 
-app.listen(PORT, () => {});
+app.listen(PORT);
