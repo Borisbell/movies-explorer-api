@@ -30,7 +30,7 @@ module.exports.updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.message === 'NotFound') {
         next(new NotFoundError('Пользователь не найден'));
-      } else if (err.message === 'CastError' || 'ValidationError') {
+      } else if (err.message === 'CastError' || err.message === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
       } else { next(err); }
     });
@@ -55,7 +55,7 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new ConflictError('Это емейл уже занят'));
-      } else if (err.message === 'CastError' || 'ValidationError') {
+      } else if (err.message === 'CastError' || err.message === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
       } else { next(err); }
     });

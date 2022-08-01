@@ -63,6 +63,4 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   return res.status(500).send({ message: 'Что-то пошло не так' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`)
-})
+app.listen(PORT, () => {});

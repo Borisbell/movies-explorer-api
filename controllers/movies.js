@@ -13,14 +13,39 @@ module.exports.getMovies = (req, res, next) => {
 };
 
 module.exports.createMovie = (req, res, next) => {
-  const { country, duration, director, year, description, image, trailerLink, nameRU, nameEN, thumbnail, movieId } = req.body;
+  const {
+    country,
+    duration,
+    director,
+    year,
+    description,
+    image,
+    trailerLink,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+  } = req.body;
   const owner = req.user._id;
-  Movie.create({ country, director, duration, year, description, image, trailerLink, nameRU, nameEN, thumbnail, movieId, owner })
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner,
+  })
     .then((movie) => {
       res.send(movie);
     })
     .catch((err) => {
-      if (err.message === 'CastError' || 'ValidationError') {
+      if (err.message === 'CastError' || err.message === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
       } else { next(err); }
     });
