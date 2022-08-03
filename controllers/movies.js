@@ -46,25 +46,23 @@ module.exports.createMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.message === 'CastError' || err.message === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        next(new BadRequestError());
       } else { next(err); }
     });
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params._id)
-    .orFail(new Error('NotFound'))
+  Movie.findById(req.params.id)
+    .orFail(new NotFoundError())
     .then((movie) => {
       if (movie.owner.toString() !== req.user._id) {
-        return next(new ForbiddenError('Нет прав на удаление карточки'));
+        return next(new ForbiddenError());
       }
-      return Movie.findByIdAndRemove(req.params.cardId)
-        .then((deletedCard) => res.send(deletedCard))
+      return Movie.findByIdAndRemove(req.params.id)
+        .then((deletedMovie) => res.send(deletedMovie))
         .catch(next);
     })
     .catch((err) => {
-      if (err.message === 'NotFound') {
-        next(new NotFoundError('Пользователь не найден'));
-      } else { next(err); }
+      next(err);
     });
 };

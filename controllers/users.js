@@ -15,13 +15,13 @@ module.exports.getMyself = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.message === 'NotFound') {
-        next(new NotFoundError('Пользователь не найден'));
+        next(new NotFoundError());
       } else { next(err); }
     });
 };
 
 module.exports.updateUser = (req, res, next) => {
-  User.findByIdAndUpdate(req.user._id, { name: req.body.name }, {
+  User.findByIdAndUpdate(req.user._id, { name: req.body.name, email: req.body.email }, {
     new: true,
     runValidators: true,
   })
@@ -29,9 +29,11 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.message === 'NotFound') {
-        next(new NotFoundError('Пользователь не найден'));
+        next(new NotFoundError());
+      } else if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
+        next(new ConflictError());
       } else if (err.message === 'CastError' || err.message === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        next(new BadRequestError());
       } else { next(err); }
     });
 };
@@ -54,9 +56,9 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        next(new ConflictError('Это емейл уже занят'));
+        next(new ConflictError());
       } else if (err.message === 'CastError' || err.message === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные'));
+        next(new BadRequestError());
       } else { next(err); }
     });
 };
@@ -68,7 +70,7 @@ module.exports.login = (req, res, next) => {
     .findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        next(new UnAuthError('Не передан емейл или пароль'));
+        next(new UnAuthError());
       }
 
       return Promise.all([
@@ -78,7 +80,7 @@ module.exports.login = (req, res, next) => {
     })
     .then(([user, isPasswordCorrect]) => {
       if (!isPasswordCorrect) {
-        next(new UnAuthError('Не передан емейл или пароль'));
+        return next(new UnAuthError());
       }
 
       return generateToken({ _id: user._id });
