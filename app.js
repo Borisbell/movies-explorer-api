@@ -28,8 +28,8 @@ app.use(bodyParser.json());
 app.use(requestLogger);
 app.use(limiter);
 const allowedCors = [
-  'https://moviesbb.nomoredomains.xyz',
-  'http://moviesbb.nomoredomains.xyz',
+  'https://moviesbb.nomorepartiesxyz.ru',
+  'http://moviesbb.nomorepartiesxyz.ru',
   'http://localhost:3000',
   'http://localhost:3001',
 ];
